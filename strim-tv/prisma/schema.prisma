@@ -2,16 +2,33 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 model User {
-  id String @id @default(uuid())
-  username String @unique
-  imageUrl String @db.Text
-  externalUserId String @unique
-  bio String? @db.Text
+  id             String   @id @default(uuid())
+  username       String   @unique
+  imageUrl       String   @db.Text
+  externalUserId String   @unique
+  bio            String?  @db.Text
+  followedBy     Follow[] @relation("followedBy")
+  following      Follow[] @relation("following")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Follow {
+  id          String @id @default(uuid())
+  followerId  String
+  followingId String
+
+  follower  User @relation(name: "following", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation(name: "followedBy", fields: [followingId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updateAt  DateTime @updatedAt
 
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }
+
 
 datasource db {
   provider     = "mysql"
