@@ -1,8 +1,4 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { ClerkProvider } from "@clerk/nextjs";
-import { UserButton } from "@clerk/nextjs";
-import UserPage from "../[username]/page";
+
 
 export default function Home() {
   return (

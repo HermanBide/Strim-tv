@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { onFollow, onUnFollow } from "../../../../actions/follow";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { unFollowUser } from "@/lib/follow-service";
 
@@ -13,13 +13,37 @@ interface ActionsProps {
 
 export const Actions = ({ isFollowing, userId }: ActionsProps) => {
   const [isPending, startTransaction] = useTransition();
+  const [following, setFollowing] = useState(isFollowing); // Manage isFollowing state
+
+  // const handleFollow = () => {
+  //   startTransaction(() => {
+  //     onFollow(userId)
+  //       .then((data) =>
+  //         toast.success(`You are now following ${data?.following.username}`)
+  //       )
+  //       .catch(() => toast.error("Something went wrong"));
+  //   });
+  // };
+
+  // const handleUnfollow = () => {
+  //   startTransaction(() => {
+  //     onUnFollow(userId)
+  //       .then((data) =>
+  //         toast.success(`You have unfollowed ${data.following.username}`)
+  //       )
+  //       .catch(() => toast.error("Something went wrong"));
+  //   });
+  // };
 
   const handleFollow = () => {
     startTransaction(() => {
       onFollow(userId)
-        .then((data) =>
-          toast.success(`You are now following ${data.following.username}`)
-        )
+        .then((data) => {
+          toast.success(
+            `You are now following the user ${data.following.username}`
+          );
+          setFollowing(true); // Update isFollowing state after successful follow
+        })
         .catch(() => toast.error("Something went wrong"));
     });
   };
@@ -27,25 +51,30 @@ export const Actions = ({ isFollowing, userId }: ActionsProps) => {
   const handleUnfollow = () => {
     startTransaction(() => {
       onUnFollow(userId)
-        .then((data) =>
-          toast.success(`You have unfollowed ${data.following.username}`)
-        )
-        .catch(() => toast.error("Something went wrong"));
+        .then((data) => {
+          toast.success(
+            `You have unfollowed the user ${data.following.username}`
+          );
+          setFollowing(false); // Update isFollowing state after successful unfollow
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error("Something went wrong");
+        });
     });
   };
-  
 
-const onClick = () => {
-  if(isFollowing ) {
-    handleUnfollow();
-  } else {
-    handleFollow()
-  }
-}
+  const onClick = () => {
+    if (isFollowing) {
+      handleUnfollow();
+    } else {
+      handleFollow();
+    }
+  };
 
   return (
     <Button disabled={isPending} onClick={onClick} variant="primary">
-      {isFollowing ? "Unfollow" : "Follow" }
+      {following ? "Unfollow" : "Follow"}
     </Button>
   );
 };
