@@ -1,16 +1,33 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
 
 model User {
-  id             String   @id @default(uuid())
-  username       String   @unique
-  imageUrl       String   @db.Text
-  externalUserId String   @unique
-  bio            String?  @db.Text
-  followedBy     Follow[] @relation("followedBy")
-  following      Follow[] @relation("following")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id             String  @id @default(uuid())
+  username       String  @unique
+  imageUrl       String  @db.Text
+  externalUserId String  @unique
+  bio            String? @db.Text
+
+  followedBy Follow[] @relation("FollowedBy")
+  following  Follow[] @relation("Following")
+
+  blocking  Block[] @relation("Blocking")
+  blockedBy Block[] @relation("BlockedBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
 }
 
 model Follow {
@@ -18,8 +35,8 @@ model Follow {
   followerId  String
   followingId String
 
-  follower  User @relation(name: "following", fields: [followerId], references: [id], onDelete: Cascade)
-  following User @relation(name: "followedBy", fields: [followingId], references: [id], onDelete: Cascade)
+  follower  User @relation(name: "Following", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation(name: "FollowedBy", fields: [followingId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
@@ -29,13 +46,16 @@ model Follow {
   @@index([followingId])
 }
 
+model Block {
+  id        String @id @default(uuid())
+  blockerId String
+  blockedId String
 
-datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
-}
+  blocker User @relation(name: "Blocking", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation(name: "BlockedBy", fields: [blockedId], references: [id], onDelete: Cascade)
+  
 
-generator client {
-  provider = "prisma-client-js"
+  @@unique([blockedId, blockerId])
+  @@index([blockerId])
+  @@index([blockedId])
 }

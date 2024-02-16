@@ -10,10 +10,11 @@ export const onFollow = async (id: string) => {
     revalidatePath("/");
 
     if (followedUser) {
-      revalidatePath(`${followedUser.following.username}`);
+      revalidatePath(`${followedUser?.following?.username}`);
     }
     return followedUser;
   } catch (error) {
+    console.log(error, "Something went wrong")
     throw new Error(`internal error: ${error}`);
   }
 };
@@ -24,7 +25,7 @@ export const onUnFollow = async (id: string) => {
     revalidatePath("/");
 
     if (unfollowedUser) {
-      revalidatePath(`/${unfollowedUser.following.username}`);
+      revalidatePath(`/${unfollowedUser?.following.username}`);
     }
 
     return unfollowedUser;

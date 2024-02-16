@@ -1,0 +1,45 @@
+"use client";
+
+import { useSidebar } from "@/store/use-sidebar";
+import { Follow, User } from "@prisma/client";
+import { UserItem, UserItemSkeleton } from "./userItem";
+
+interface FollowingProps {
+  data: (Follow & { following: User })[];
+}
+
+export const Following = ({ data }: FollowingProps) => {
+  const { collapsed } = useSidebar((state) => state);
+  if (!data.length) {
+    return null;
+  }
+  return (
+    <div>
+      {!collapsed && (
+        <div>
+          <p className="text-sm text-muted-foreground">following</p>
+        </div>
+      )}
+
+      <ul>
+        {data.map((follow) => (
+          <UserItem
+            key={follow.following.id}
+            username={follow.following.username}
+            imageUrl={follow.following.imageUrl}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export const FollowingSkeleton = () => {
+    return (
+        <ul className="px-2 pt-2 lg-pt-0">
+            {[...Array(3)].map((_,i) => (
+                <UserItemSkeleton key={i} />
+            ))}
+        </ul> 
+    )
+}

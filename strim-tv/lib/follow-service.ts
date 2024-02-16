@@ -75,7 +75,7 @@ export const isFolloingUser = async (id: string) => {
 export const followUser = async (id: string) => {
   const self = await getSelf();
 
-  const otherUser = await db.user.findUnique({ where: { id }, });
+  const otherUser = await db.user.findUnique({ where: { id } });
 
   if (!otherUser) {
     throw new Error("user not found");
@@ -111,32 +111,31 @@ export const followUser = async (id: string) => {
 
 export const unFollowUser = async (id: string) => {
   try {
-
     const self = await getSelf();
-  
+
     const otherUser = await db.user.findUnique({
       where: {
         id,
       },
     });
-  
+
     if (!otherUser) throw new Error("user not found");
-  
+
     if (otherUser.id === self?.id) {
       throw new Error("cannot unfollow yourself");
     }
-  
+
     const existingFollow = await db.follow.findFirst({
       where: {
         followerId: self?.id,
         followingId: otherUser.id,
       },
     });
-  
+
     if (!existingFollow) {
       throw new Error("Not following");
     }
-  
+
     const follow = await db.follow.delete({
       where: {
         id: existingFollow.id,
@@ -145,10 +144,30 @@ export const unFollowUser = async (id: string) => {
         following: true,
       },
     });
-  
+
     return follow;
   } catch (err) {
-    console.log(err, "unFollowUser Err");
-    throw new Error("Error retrieving the data")
+    console.error(err, "unFollowUser Err");
+    throw new Error("Error retrieving the data");
+  }
+};
+
+export const getFollowedUsers = async () => {
+  try {
+    const self = await getSelf();
+    const followedUsers = await db.follow.findMany({
+      where: { followerId: self.id, following: {
+        blocking: {
+          none: {
+            blockedId: self.id
+          }
+        }
+      } },
+      include: { following: true },
+    });
+    return followedUsers;
+  } catch (err) {
+    console.log(err, "");
+    return [];
   }
 };

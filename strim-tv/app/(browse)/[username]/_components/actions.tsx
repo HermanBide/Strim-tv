@@ -5,6 +5,7 @@ import { onFollow, onUnFollow } from "../../../../actions/follow";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { unFollowUser } from "@/lib/follow-service";
+import { onBlock } from "@/actions/block";
 
 interface ActionsProps {
   isFollowing: boolean;
@@ -72,9 +73,24 @@ export const Actions = ({ isFollowing, userId }: ActionsProps) => {
     }
   };
 
+  const handleBlock = () => {
+    startTransaction(() => {
+      onBlock(userId)
+      .then((data) => toast.success(`Unblocked the user ${data?.blocked.username}`))
+      .catch(() => toast.error("something went wrong"))
+    })
+  }
+
   return (
+    <>
     <Button disabled={isPending} onClick={onClick} variant="primary">
+      {/* {following ? "Unfollow" : "Follow"} */}
       {following ? "Unfollow" : "Follow"}
+      {/* {following ? "follow" : "UnFollow"} */}
     </Button>
+    <Button onClick={handleBlock} disabled={isPending}>
+      Block User
+    </Button>
+    </>
   );
 };
