@@ -1,21 +1,43 @@
 //use current user from clerk and match use in database
-
 import { currentUser } from "@clerk/nextjs";
-
 import { db } from "./db";
 
 export const getSelf = async () => {
+  const self = await currentUser();
+  console.log(self, "CURRENT USER INFO!!!")
+
+  if (!self || !self.username) {
+    throw new Error("Unauthorized");
+  }
+
+  const user = await db.user.findUnique({
+    where: { externalUserId: self?.id },
+  });
+
+  if (!user) {
+    throw new Error("Not found");
+  }
+  console.log(user, "USER NOT FOUND!!!!")
+return user;
+}
+
+export const getSelfByUsername = async (username: string) => {
   const self = await currentUser();
 
   if (!self || !self.username) {
     throw new Error("Unauthorized");
   }
+
   const user = await db.user.findUnique({
-    where: { externalUserId: self.id },
+    where: { username },
   });
 
   if (!user) {
-    throw new Error("Not found");
+    throw new Error("User not found");
+  }
+
+  if (self.username !== user.username) {
+    throw new Error("Unauthorized");
   }
 
   return user;
