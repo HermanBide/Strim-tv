@@ -74,13 +74,8 @@ npx prisa db push
 # Overview and Purpose:
 A steaming platform that allows users to stream, record and save their videos as well as chat and interact with other users 
 
-
 # Installation and setup: 
 
-To run the applciation
-```
-npm run dev
-```
 to run backend and database
 ```
 npx prisma studio
