@@ -14,26 +14,6 @@ pnpm dev
 bun dev
 ```
 
-///////////////////////
-///////////////////////
-# run client side
-```
-npm run dev
-```
-
-# run server side
-```
-npx prisma studio
-```
-
-# update database
-```
-npx prisma generate
-```
-```
-npx prisa db push
-```
-
 # Key Features:
 
 📡 Streaming using RTMP / WHIP protocols
@@ -68,15 +48,29 @@ npx prisa db push
 
 
 
-
-
-
 # Overview and Purpose:
 A steaming platform that allows users to stream, record and save their videos as well as chat and interact with other users 
 
 # Installation and setup: 
 
-to run backend and database
+# run client side
+```
+npm run dev
+```
+
+# run server side
+```
+npx prisma studio
+```
+
+# update database
+```
+npx prisma generate
+```
+```
+npx prisa db push
+```
+# run backend and database
 ```
 npx prisma studio
 ```
