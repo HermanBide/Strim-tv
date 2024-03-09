@@ -17,14 +17,20 @@ bun dev
 ///////////////////////
 ///////////////////////
 # run client side
+```
 npm run dev
+```
 
 # run server side
+``
 npx prisma studio
+```
 
-# update client side 
+# update database
+```
 npx prisma generate
 npx prisa db push
+```
 
 # Key Features:
 
