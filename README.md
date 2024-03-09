@@ -70,11 +70,6 @@ npx prisma generate
 ```
 npx prisa db push
 ```
-# run backend and database
-```
-npx prisma studio
-```
-
 
 # API Documentation
 
