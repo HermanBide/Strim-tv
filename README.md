@@ -22,13 +22,15 @@ npm run dev
 ```
 
 # run server side
-``
+```
 npx prisma studio
 ```
 
 # update database
 ```
 npx prisma generate
+```
+```
 npx prisa db push
 ```
 
@@ -75,10 +77,6 @@ A steaming platform that allows users to stream, record and save their videos as
 
 # Installation and setup: 
 
--- clone directory
-```
-npm install
-```
 To run the applciation
 ```
 npm run dev
@@ -107,7 +105,7 @@ Document any configuration files or settings and explain their purpose.
 Specify default values and acceptable ranges for configuration parameters.
 
 # Dependencies:
-
+```
 "@babel/core": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
@@ -147,7 +145,7 @@ Specify default values and acceptable ranges for configuration parameters.
     "usehooks-ts": "^2.14.0",
     "uuid": "^9.0.1",
     "zustand": "^4.5.0"
-
+```
 # Testing:
 
 coming soon....
